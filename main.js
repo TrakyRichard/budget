@@ -1,140 +1,183 @@
-const budgetInput = document.getElementById('budget');
-const nomdepense = document.getElementById('nomDep');
-const montantDepense = document.getElementById('montantDep');
-const budgetOutput = document.getElementById('budgetCFA');
-const balanceOutput = document.getElementById('balanceCFA');
-const depenseOutpout = document.getElementById('depenceCFA');
-const table = document.getElementById('myTable');
-const edit = document.querySelector(".edit");
-const trash = document.querySelector(".trash")
-var rIndex;
-function display(e){
-    document.getElementById(e).style.display = 'block';
-}
-
-function remove(e){
-    document.getElementById(e).style.display = 'none';
-}
-
-let depense = Number(montantDepense.value);
-let budget;
-let balance = Number(balanceOutput.value);
-var buttons = "<i onclick='editHtmlTbleSelectedRow()' class='fa fa-pencil-square' aria-hidden='true'></i>&nbsp<i onclick='removeSelectedRow()' class='fa trash fa-trash' aria-hidden='true'></i>";
-budgetOutput.innerHTML = '0 FCFA';
-depenseOutpout.innerHTML = "0 FCFA";
-balanceOutput.innerHTML = "0 FCFA"
-function soumissionMontant(){
-   if(Number(budgetInput.value)){
-    budget = Number(budgetInput.value);
-    budgetOutput.innerHTML = ''+ budget +' FCFA';
-    balanceOutput.innerHTML = ''+ budget +' FCFA';
-    budgetInput.value = "";
-    console.log(budget);
+class UI {
+    constructor() {
+      this.budgetFeedback = document.querySelector(".budget-feedback");
+      this.expenseFeedback = document.querySelector(".expense-feedback");
+      this.budgetForm = document.getElementById("budget-form");
+      this.budgetInput = document.getElementById("budget-input");
+      this.budgetAmount = document.getElementById("budget-amount");
+      this.expenseAmount = document.getElementById("expense-amount");
+      this.balance = document.getElementById("balance");
+      this.balanceAmount = document.getElementById("balance-amount");
+      this.expenseForm = document.getElementById("expense-form");
+      this.expenseInput = document.getElementById("expense-input");
+      this.amountInput = document.getElementById("amount-input");
+      this.expenseList = document.getElementById("expense-list");
+      this.itemList = [];
+      this.itemID = 0;
     }
-}
-console.log(balance);
-
-
-function checkEmptyInput()
-{
-    var isEmpty = false;
-
-    if(Number(montantDepense.value) === ""){
-        alert("First Name Connot Be Empty");
-        isEmpty = true;
-    }
-    else if(Number(nomdepense.value) === ""){
-        alert("Last Name Connot Be Empty");
-        isEmpty = true;
-    }
-    return isEmpty;
-}
-
-
-function addHtmlTableRow()
-{
-    // get the table by id
-    // create a new row and cells
-    // get value from input text
-    // set the values into row cell's
-    if(!checkEmptyInput()){
-    var newRow = table.insertRow(table.length),
-        cell1 = newRow.insertCell(0),
-        cell2 = newRow.insertCell(1);
-        cell3 = newRow.insertCell(2);
-
-
-    cell1.innerHTML = nomdepense.value;
-    cell2.innerHTML = montantDepense.value;
-    cell3.innerHTML = buttons;
-
-
-    // call the function to set the event to the new row
-    selectedRowToInput();
-}
-
-
-nomdepense.value = "";
-montantDepense.value = ""
-}
-       
-// display selected row data into input text
-function selectedRowToInput()
-{
-    
-    for(var i = 1; i < table.rows.length; i++)
-    {
-
-        if(budget >= 0){
-            var budgetSoustrait = 0;
-            budgetSoustrait -= montantDepense.value;
-            Math.abs(budgetSoustrait);
-            var totDep = 0;
-            var totBal = budget;
-            totDep += Math.abs(budgetSoustrait);
-            totBal -= Math.abs(budgetSoustrait);
-            balanceOutput.innerHTML = totBal+" FCFA";
-            depenseOutpout.innerHTML = totDep +" FCFA";
-        
-            console.log(Math.abs(budgetSoustrait));
-            budget -= nomdepense.value;
+  
+    //submit budget method
+    submitBudgetForm(){
+        const value = this.budgetInput.value;
+        if(value === '' || value < 0){
+          this.budgetFeedback.classList.add('showItem');
+          this.budgetFeedback.innerHTML = `<p>value cannot be empty or negative</p>`;
+          const self = this;
+          setTimeout(function(){
+            self.budgetFeedback.classList.remove('showItem');
+          }, 3000);
+        } else {
+          this.budgetAmount.textContent = value;
+          this.budgetInput.value = '';
+          this.showBalance();
         }
-        table.rows[i].onclick = function()
-        {
-            // get the seected row index
-            rIndex = this.rowIndex;
-            nomdepense.value = this.cells[0].innerHTML;
-            montantDepense.value = this.cells[1].innerHTML;
-            buttons = this.cells[2].innerHTML;
-
-        };
-
     }
-}
-
-
-
-function editHtmlTbleSelectedRow()
-{
-
-   if(!checkEmptyInput()){
-    table.rows[rIndex].cells[0].innerHTML = nomdepense.value;
-    table.rows[rIndex].cells[1].innerHTML = montantDepense.value;
-  }
-}
-
-
-
-function removeSelectedRow()
-{
-
-    if(!checkEmptyInput()){
-        table.rows[rIndex].cells[0].innerHTML = nomdepense.value;
-        table.rows[rIndex].cells[1].innerHTML = montantDepense.value;
+  
+    //show balance
+    showBalance(){
+      const expense = this.totalExpense();
+      const total = parseInt(this.budgetAmount.textContent) - expense;
+      this.balanceAmount.textContent = total;
+      if(total < 0){
+        this.balance.classList.remove('showGreen', 'showBlack');
+        this.balance.classList.add('showRed');
+      } else if(total > 0){
+        this.balance.classList.remove('showRed', 'showBlack');
+        this.balance.classList.add('showGreen');
+      } else if(total === 0){
+        this.balance.classList.remove('showRed', 'showGreen');
+        this.balance.classList.add('showBlack');
       }
-    table.deleteRow(rIndex);
-    // clear input text
-    nomdepense.value = "";
-    montantDepense.value = ""
-    buttons = "";
-}
+    }
+    //submit expense form
+    submitExpenseForm(){
+      const expenseValue = this.expenseInput.value;
+      const amountValue = this.amountInput.value;
+      if(expenseValue === '' || amountValue === '' || amountValue < 0){
+        this.expenseFeedback.classList.add('showItem');
+        this.expenseFeedback.innerHTML = `<p>values cannot be empty or negative</p>`;
+        const self = this;
+        setTimeout(function(){
+          self.expenseFeedback.classList.remove('showItem');
+        }, 3000)
+      } else {
+        let amount = parseInt(amountValue);
+        this.expenseInput.value = '';
+        this.amountInput.value = '';
+  
+        let expense = {
+          id: this.itemID,
+          title: expenseValue,
+          amount: amount
+        }
+        this.itemID++;
+        this.itemList.push(expense);
+        this.addExpense(expense);
+        this.showBalance();
+  
+      }
+    }
+  
+    //add expense
+    addExpense(expense){
+      const div = document.createElement('div');
+      div.classList.add('expense');
+      div.innerHTML = `<div class="expense-item d-flex justify-content-between align-items-baseline">
+  
+      <h6 class="expense-title mb-0 text-uppercase list-item">- ${expense.title}</h6>
+      <h5 class="expense-amount mb-0 list-item">$${expense.amount}</h5>
+  
+      <div class="expense-icons list-item">
+  
+       <a href="#" class="edit-icon mx-2" data-id="${expense.id}">
+        <i class="fa fa-pencil-square"></i>
+       </a>
+       <a href="#" class="delete-icon" data-id="${expense.id}">
+        <i class="fa fa-trash"></i>
+       </a>
+      </div>
+     </div`;
+     this.expenseList.appendChild(div);
+    }
+  
+    //total expense
+    totalExpense(){
+      let total = 0;
+      if(this.itemList.length > 0){
+        total = this.itemList.reduce(function(acc, curr){
+          acc += curr.amount;
+          return acc;
+        }, 0)
+      } 
+      this.expenseAmount.textContent = total;
+      return total;
+    }
+  
+    //edit expense
+    editExpense(element){
+      let id = parseInt(element.dataset.id);
+      let parent = element.parentElement.parentElement.parentElement;
+      //remove from DOM
+      this.expenseList.removeChild(parent);
+      //remove from the list
+      let expense = this.itemList.filter(function(item){
+        return item.id === id;
+      })
+      //show values
+      this.expenseInput.value = expense[0].title;
+      this.amountInput.value = expense[0].amount;
+      //remove from the list
+      let tempList = this.itemList.filter(function(item){
+        return item.id !== id;
+      })
+      this.itemList = tempList;
+      this.showBalance();
+    }
+  
+    //delete expense
+    deleteExpense(element){
+      let id = parseInt(element.dataset.id);
+      let parent = element.parentElement.parentElement.parentElement;
+      //remove from DOM
+      this.expenseList.removeChild(parent);
+      //remove from the list
+      let tempList = this.itemList.filter(function(item){
+        return item.id !== id;
+      })
+      this.itemList = tempList;
+      this.showBalance();
+    }
+  }
+  
+  function eventListeners(){
+    const budgetForm = document.getElementById('budget-form');
+    const expenseForm = document.getElementById('expense-form');
+    const expenseList = document.getElementById('expense-list');
+  
+    //new instance of UI Class
+    const ui = new UI();
+    
+    //budget form submit
+    budgetForm.addEventListener('submit', function(event){
+      event.preventDefault();
+      ui.submitBudgetForm();
+    })
+    //expense form submit
+    expenseForm.addEventListener('submit', function(event){
+      event.preventDefault();
+      ui.submitExpenseForm();
+  
+    })
+    //expense list submit
+    expenseList.addEventListener('click', function(event){
+      if (event.target.parentElement.classList.contains('edit-icon')){
+        ui.editExpense(event.target.parentElement);
+      }else if (event.target.parentElement.classList.contains('delete-icon')){
+        ui.deleteExpense(event.target.parentElement);
+      }
+    })
+  }
+  
+  document.addEventListener('DOMContentLoaded', function(){
+    eventListeners();
+  })

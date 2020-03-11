@@ -10,71 +10,105 @@
     <title>Budget</title>
 </head>
 <body>
-    
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12 col-md-8 col-lg-6 col-xl-6">
-            <div class="form p-3 mt-5 col-12 border border-success">
-                <div class="form-group">
-                    <label for="budget">Veuillez entrez votre budget</label>
-                    <input class="form-control" type="number" name="budget" id="budget"/>
-                </div>
-                <button class="btn btn-outline-success" type="submit" onclick="soumissionMontant()">Soumettre</button>
-            </div>    
-
-            <div class="form p-3 mt-5 col-12 border border-danger">
-                <div class="form-group">
-                    <label for="nom">Veuillez entrez Le nom de la dépense</label>
-                    <input class="form-control" type="text" name="nomDep" id="nomDep"/>
-                </div>
-                <div class="form-group">
-                    <label for="montant">Veuillez entrez montant de la dépense</label>
-                    <input class="form-control" type="number" name="montantDep" id="montantDep"/>
-                </div>
-                <button class="btn btn-outline-danger" onclick="addHtmlTableRow()" type="submit">Soumettre</button>
-            </div>  
+    <div class="container-fluid">
+     <div class="row">
+      <div class="col-11 mx-auto pt-3">
+       <!-- title -->
+       <h3 class="text-uppercase mb-4">budget app</h3>
+       <div class="row">
+        <div class="col-md-5 my-3">
+         <!-- budget feedback -->
+         <div class="budget-feedback alert alert-danger text-capitalize">budget feedback</div>
+         <!-- budget form -->
+         <form id="budget-form" class=" budget-form">
+          <h5 class="text-capitalize">please enter your budget</h5>
+          <div class="form-group">
+           <input type="number" class="form-control budget-input" id="budget-input">
+          </div>
+          <!-- submit button -->
+          <button type="submit" class="btn text-capitalize budget-submit" id="budget-submit">calculate</button>
+         </form>
         </div>
-        <div class="row col-12 col-md-12 col-lg-6 col-xl-6">
-            <div class="col-4 mt-5 text-center">
-                <h3>Budget</h3>
-                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="money-check-alt" class="svg" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M608 32H32C14.33 32 0 46.33 0 64v384c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V64c0-17.67-14.33-32-32-32zM176 327.88V344c0 4.42-3.58 8-8 8h-16c-4.42 0-8-3.58-8-8v-16.29c-11.29-.58-22.27-4.52-31.37-11.35-3.9-2.93-4.1-8.77-.57-12.14l11.75-11.21c2.77-2.64 6.89-2.76 10.13-.73 3.87 2.42 8.26 3.72 12.82 3.72h28.11c6.5 0 11.8-5.92 11.8-13.19 0-5.95-3.61-11.19-8.77-12.73l-45-13.5c-18.59-5.58-31.58-23.42-31.58-43.39 0-24.52 19.05-44.44 42.67-45.07V152c0-4.42 3.58-8 8-8h16c4.42 0 8 3.58 8 8v16.29c11.29.58 22.27 4.51 31.37 11.35 3.9 2.93 4.1 8.77.57 12.14l-11.75 11.21c-2.77 2.64-6.89 2.76-10.13.73-3.87-2.43-8.26-3.72-12.82-3.72h-28.11c-6.5 0-11.8 5.92-11.8 13.19 0 5.95 3.61 11.19 8.77 12.73l45 13.5c18.59 5.58 31.58 23.42 31.58 43.39 0 24.53-19.05 44.44-42.67 45.07zM416 312c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h112c4.42 0 8 3.58 8 8v16zm160 0c0 4.42-3.58 8-8 8h-80c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16zm0-96c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h272c4.42 0 8 3.58 8 8v16z"></path></svg>
-                <br>
-                <br>
-                <div id="budgetCFA" class="budgetCFA">0 FCFA</div>
-                <br>
-            </div>
-
-            <div class="col-4 mt-5 text-center">
-                <h3>Depenses</h3>
-                <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="credit-card" class="svg" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M527.9 32H48.1C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48.1 48h479.8c26.6 0 48.1-21.5 48.1-48V80c0-26.5-21.5-48-48.1-48zM54.1 80h467.8c3.3 0 6 2.7 6 6v42H48.1V86c0-3.3 2.7-6 6-6zm467.8 352H54.1c-3.3 0-6-2.7-6-6V256h479.8v170c0 3.3-2.7 6-6 6zM192 332v40c0 6.6-5.4 12-12 12h-72c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h72c6.6 0 12 5.4 12 12zm192 0v40c0 6.6-5.4 12-12 12H236c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h136c6.6 0 12 5.4 12 12z"></path></svg>
-                <br>
-                <br>
-                <div id="depenceCFA" class="depenceCFA"></div>
-                <br>
-            </div>
-
-            <div class="col-4 mt-5 text-center">
-                <h3>Balance</h3>
-                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="dollar-sign" class="svg" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 512"><path fill="currentColor" d="M209.2 233.4l-108-31.6C88.7 198.2 80 186.5 80 173.5c0-16.3 13.2-29.5 29.5-29.5h66.3c12.2 0 24.2 3.7 34.2 10.5 6.1 4.1 14.3 3.1 19.5-2l34.8-34c7.1-6.9 6.1-18.4-1.8-24.5C238 74.8 207.4 64.1 176 64V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48h-2.5C45.8 64-5.4 118.7.5 183.6c4.2 46.1 39.4 83.6 83.8 96.6l102.5 30c12.5 3.7 21.2 15.3 21.2 28.3 0 16.3-13.2 29.5-29.5 29.5h-66.3C100 368 88 364.3 78 357.5c-6.1-4.1-14.3-3.1-19.5 2l-34.8 34c-7.1 6.9-6.1 18.4 1.8 24.5 24.5 19.2 55.1 29.9 86.5 30v48c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-48.2c46.6-.9 90.3-28.6 105.7-72.7 21.5-61.6-14.6-124.8-72.5-141.7z"></path></svg>
-                <br>
-                <br>
-                <div id="balanceCFA" class="balanceCFA">O FCFA</div>
-                <br>
-            </div>
-            <div class="row text-center table-responsive col-12 col-md-12 col-lg-12 col-xl-12">
-                <table id="myTable" class="table">
-                        <tr>
-                            <th scope="col">espense Title</th>
-                            <th scope="col">Expense Value</th>
-                            <th scope="col"></th>
-                        </tr>
-                </table>
-            </div>
+        <div class="col-md-7">
+         <!-- app info -->
+         <div class="row my-3">
+          <div class="col-4 text-center mb-2">
+           <h6 class="text-uppercase info-title">budget</h6>
+           <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="money-check-alt" class="svg" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M608 32H32C14.33 32 0 46.33 0 64v384c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V64c0-17.67-14.33-32-32-32zM176 327.88V344c0 4.42-3.58 8-8 8h-16c-4.42 0-8-3.58-8-8v-16.29c-11.29-.58-22.27-4.52-31.37-11.35-3.9-2.93-4.1-8.77-.57-12.14l11.75-11.21c2.77-2.64 6.89-2.76 10.13-.73 3.87 2.42 8.26 3.72 12.82 3.72h28.11c6.5 0 11.8-5.92 11.8-13.19 0-5.95-3.61-11.19-8.77-12.73l-45-13.5c-18.59-5.58-31.58-23.42-31.58-43.39 0-24.52 19.05-44.44 42.67-45.07V152c0-4.42 3.58-8 8-8h16c4.42 0 8 3.58 8 8v16.29c11.29.58 22.27 4.51 31.37 11.35 3.9 2.93 4.1 8.77.57 12.14l-11.75 11.21c-2.77 2.64-6.89 2.76-10.13.73-3.87-2.43-8.26-3.72-12.82-3.72h-28.11c-6.5 0-11.8 5.92-11.8 13.19 0 5.95 3.61 11.19 8.77 12.73l45 13.5c18.59 5.58 31.58 23.42 31.58 43.39 0 24.53-19.05 44.44-42.67 45.07zM416 312c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h112c4.42 0 8 3.58 8 8v16zm160 0c0 4.42-3.58 8-8 8h-80c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16zm0-96c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h272c4.42 0 8 3.58 8 8v16z"></path></svg>           <h4 class="text-uppercase mt-2 budget" id="budget"><span>$ </span><span id="budget-amount">0</span></h4>
+          </div>
+          <div class="col-4 text-center">
+           <h6 class="text-uppercase info-title">expenses</h6>
+           <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="credit-card" class="svg" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M527.9 32H48.1C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48.1 48h479.8c26.6 0 48.1-21.5 48.1-48V80c0-26.5-21.5-48-48.1-48zM54.1 80h467.8c3.3 0 6 2.7 6 6v42H48.1V86c0-3.3 2.7-6 6-6zm467.8 352H54.1c-3.3 0-6-2.7-6-6V256h479.8v170c0 3.3-2.7 6-6 6zM192 332v40c0 6.6-5.4 12-12 12h-72c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h72c6.6 0 12 5.4 12 12zm192 0v40c0 6.6-5.4 12-12 12H236c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h136c6.6 0 12 5.4 12 12z"></path></svg>           <h4 class="text-uppercase mt-2 expense" id="expense"><span>$ </span><span id="expense-amount">0</span></h4>
+          </div>
+          <div class="col-4 text-center">
+           <h6 class="text-uppercase info-title">balance</h6>
+           <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="dollar-sign" class="svg" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 512"><path fill="currentColor" d="M209.2 233.4l-108-31.6C88.7 198.2 80 186.5 80 173.5c0-16.3 13.2-29.5 29.5-29.5h66.3c12.2 0 24.2 3.7 34.2 10.5 6.1 4.1 14.3 3.1 19.5-2l34.8-34c7.1-6.9 6.1-18.4-1.8-24.5C238 74.8 207.4 64.1 176 64V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48h-2.5C45.8 64-5.4 118.7.5 183.6c4.2 46.1 39.4 83.6 83.8 96.6l102.5 30c12.5 3.7 21.2 15.3 21.2 28.3 0 16.3-13.2 29.5-29.5 29.5h-66.3C100 368 88 364.3 78 357.5c-6.1-4.1-14.3-3.1-19.5 2l-34.8 34c-7.1 6.9-6.1 18.4 1.8 24.5 24.5 19.2 55.1 29.9 86.5 30v48c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-48.2c46.6-.9 90.3-28.6 105.7-72.7 21.5-61.6-14.6-124.8-72.5-141.7z"></path></svg>
+           <h4 class="text-uppercase mt-2 balance" id="balance"> <span>$ </span><span id="balance-amount">0</span></h4>
+          </div>
+         </div>
         </div>
+       </div>
+   
+       <div class="row">
+        <div class="col-md-5 my-3">
+         <!-- expense feedback -->
+         <div class="expense-feedback alert alert-danger text-capitalize">expense feedback</div>
+         <!-- expense form -->
+         <form id="expense-form" class=" expense-form">
+          <h5 class="text-capitalize">please enter your expense</h5>
+          <div class="form-group">
+           <input type="text" class="form-control expense-input" id="expense-input">
+          </div>
+          <h5 class="text-capitalize">please enter expense amount</h5>
+          <div class="form-group">
+           <input type="number" class="form-control expense-input" id="amount-input">
+          </div>
+          <!-- submit button -->
+          <button type="submit" class="btn text-capitalize expense-submit" id="expense-submit">add expense</button>
+         </form>
+        </div>
+        <div class="col-md-7 my-3">
+         <!-- expense list -->
+         <div class="expense-list" id="expense-list">
+   
+          <div class="expense-list__info d-flex justify-content-between text-capitalize">
+           <h5 class="list-item">expense title</h5>
+           <h5 class="list-item">expense value</h5>
+           <h5 class="list-item"></h5>
+          </div>
+          <!-- single expense -->
+   
+          <!-- <div class="expense">
+           <div class="expense-item d-flex justify-content-between align-items-baseline">
+   
+            <h6 class="expense-title mb-0 text-uppercase list-item">- title</h6>
+            <h5 class="expense-amount mb-0 list-item">amount</h5>
+   
+            <div class="expense-icons list-item">
+   
+             <a href="#" class="edit-icon mx-2" data-id="${expense.id}">
+              <i class="fas fa-edit"></i>
+             </a>
+             <a href="#" class="delete-icon" data-id="${expense.id}">
+              <i class="fas fa-trash"></i>
+             </a>
+            </div>
+           </div>
+   
+          </div> -->
+   
+          <!-- end of single expense -->
+   
+         </div>
+        </div>
+       </div>
+   
+   
+   
+   
+      </div>
+     </div>
     </div>
-</div>
-
-
 
 
 <script type="text/javascript" src="main.js"></script>
